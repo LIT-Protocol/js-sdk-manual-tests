@@ -68,7 +68,8 @@ import { LitContracts } from "@lit-protocol/contracts-sdk";
     },
   });
 
-  const res = await litNodeClient.executeJs({
+  // -- executeJs
+  const executeJsRes = await litNodeClient.executeJs({
     code: `(async () => {
       const sigShare = await LitActions.signEcdsa({
         toSign: dataToSign,
@@ -85,7 +86,16 @@ import { LitContracts } from "@lit-protocol/contracts-sdk";
     },
   });
 
-  console.log(res);
+  console.log("✅ executeJsRes:", executeJsRes);
+
+  // -- pkpSign
+  const pkpSignRes = await litNodeClient.pkpSign({
+    pubKey: pkp.publicKey,
+    sessionSigs: sessionSigs,
+    toSign: ethers.utils.arrayify(ethers.utils.keccak256([1, 2, 3, 4, 5])),
+  });
+
+  console.log("✅ pkpSignRes:", pkpSignRes);
 
   process.exit();
 })();
