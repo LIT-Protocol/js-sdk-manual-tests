@@ -30,7 +30,7 @@ import { LitContracts } from "@lit-protocol/contracts-sdk";
   // mint a pkp
   const litContracts = new LitContracts({
     signer: wallet,
-    debug: true,
+    debug: false,
     network: LitNetwork.Cayenne,
   });
 
