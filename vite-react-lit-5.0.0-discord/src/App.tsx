@@ -15,7 +15,8 @@ import { useEffect, useState } from "react";
  * ==================== CONFIGURATION ====================
  */
 const RELAY_API_KEY = "____________YOUR RELAYER API KEY_____________";
-const EOA_PRIVATE_KEY = "____________YOUR EOA PRIVATE KEY_____________";
+const EOA_PRIVATE_KEY =
+  "0xac0974bec39a17e36ba4a6b4d238ff944bacb478cbed5efcae784d7bf4f2ff80";
 const RELAY_RPC_URL = "https://habanero-relayer.getlit.dev";
 const DISCORD_REDIRECT_URI = "http://localhost:5173";
 
@@ -151,13 +152,13 @@ function App() {
       chain: "ethereum", // If this is omitted in 6.0.0, it will default to "ethereum"
       resourceAbilityRequests: [
         {
-          resource: new LitPKPResource("*"),
+          resource: new LitPKPResource(lastDiscordAuthMethodOwnedPkp.publicKey),
           ability: LitAbility.PKPSigning,
         },
-        {
-          resource: new LitActionResource("*"),
-          ability: LitAbility.LitActionExecution,
-        },
+        // {
+        //   resource: new LitActionResource("*"),
+        //   ability: LitAbility.LitActionExecution,
+        // },
       ],
       capacityDelegationAuthSig: capacityDelegationAuthSig,
       // AuthCallbackParams (6.0.0) would include sessionKey. Here, we are using the old way of passing sessionKey.
