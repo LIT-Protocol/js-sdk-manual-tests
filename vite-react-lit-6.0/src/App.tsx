@@ -23,8 +23,11 @@ import {
   LIT_CHAIN_RPC_URL,
   LIT_CHAINS,
 } from "@lit-protocol/constants";
-import { ethConnect } from "@lit-protocol/auth-browser";
-
+import {
+  ethConnect,
+  solConnect,
+  cosmosConnect,
+} from "@lit-protocol/auth-browser";
 export const DISCORD_REDIRECT_URI = "http://localhost:5173";
 export const EOA_PRIVATE_KEY =
   "0xac0974bec39a17e36ba4a6b4d238ff944bacb478cbed5efcae784d7bf4f2ff80";
@@ -437,6 +440,110 @@ function App() {
 
     console.log("✅ DiscordProvider initialized!", discordProvider);
   };
+  const getSolanaAuthSig = async () => {
+    const litNodeClient = new LitNodeClient({
+      litNetwork: LitNetwork.Cayenne,
+    });
+
+    await litNodeClient.connect();
+
+    const authSig = await solConnect.checkAndSignSolAuthMessage();
+    console.log(JSON.stringify(authSig));
+
+    const accs = [
+      {
+        method: "",
+        params: [":userAddress"],
+        pdaParams: [],
+        pdaInterface: { offset: 0, fields: {} },
+        pdaKey: "",
+        chain: "solana",
+        returnValueTest: {
+          key: "",
+          comparator: "=",
+          value: authSig.address,
+        },
+      },
+    ];
+
+    const encryptRes = await encryptString(
+      {
+        solRpcConditions: accs,
+        dataToEncrypt: "Hello world",
+      },
+      litNodeClient
+    );
+
+    console.log("✅ encryptRes:", encryptRes);
+
+    // -- Decrypt the encrypted string
+    const decryptRes = await decryptToString(
+      {
+        solRpcConditions: accs,
+        ciphertext: encryptRes.ciphertext,
+        dataToEncryptHash: encryptRes.dataToEncryptHash,
+        authSig: authSig,
+        chain: "solana",
+      },
+      litNodeClient
+    );
+
+    console.log("decryptRes:", decryptRes);
+  };
+
+  // FIXME: doesn't work
+  // const getCosmosAuthSig = async () => {
+  //   console.log("Get cosmos auth sig");
+  //   const authSig = await cosmosConnect.checkAndSignCosmosAuthMessage({
+  //     chain: "cosmos",
+  //     walletType: "keplr",
+  //   });
+  //   console.log(JSON.stringify(authSig));
+  //   const litNodeClient = new LitNodeClient({
+  //     litNetwork: LitNetwork.Cayenne,
+  //   });
+
+  //   await litNodeClient.connect();
+
+  //   const accs = [
+  //     {
+  //       conditionType: "cosmos",
+  //       path: ":userAddress",
+  //       chain: "cosmos",
+  //       returnValueTest: {
+  //         key: "",
+  //         comparator: "=",
+  //         value: authSig.address,
+  //       },
+  //     },
+  //   ];
+
+  //   const encryptRes = await encryptString(
+  //     {
+  //       authSig: authSig,
+  //       chain: "cosmos",
+  //       unifiedAccessControlConditions: accs,
+  //       dataToEncrypt: "Hello world",
+  //     },
+  //     litNodeClient
+  //   );
+
+  //   console.log("✅ encryptRes:", encryptRes);
+
+  //   // -- Decrypt the encrypted string
+  //   const decryptRes = await decryptToString(
+  //     {
+  //       unifiedAccessControlConditions: accs,
+  //       ciphertext: encryptRes.ciphertext,
+  //       dataToEncryptHash: encryptRes.dataToEncryptHash,
+  //       authSig: authSig,
+  //       chain: "cosmos",
+  //     },
+  //     litNodeClient
+  //   );
+
+  //   console.log("decryptRes:", decryptRes);
+  // };
 
   return (
     <>
@@ -453,6 +560,14 @@ function App() {
         <button onClick={async () => await runLitAuthClientDiscordStuff()}>
           runLitAuthClientDiscordStuff
         </button>
+        <hr />
+        <button onClick={async () => await getSolanaAuthSig()}>
+          getSolanaAuthSig
+        </button>
+        <hr />
+        {/* <button onClick={async () => await getCosmosAuthSig()}>
+          getCosmosAuthSig
+        </button> */}
         <hr />
       </div>
     </>
