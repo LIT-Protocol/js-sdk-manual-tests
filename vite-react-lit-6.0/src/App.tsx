@@ -16,21 +16,12 @@ import { LitAbility } from "@lit-protocol/types";
 import { AuthCallbackParams } from "@lit-protocol/types";
 import { ethers } from "ethers";
 import { LitContracts } from "@lit-protocol/contracts-sdk";
-import { DiscordProvider, LitAuthClient } from "@lit-protocol/lit-auth-client";
-import {
-  RELAY_URL_CAYENNE,
-  ProviderType,
-  LIT_CHAIN_RPC_URL,
-  LIT_CHAINS,
-} from "@lit-protocol/constants";
-import {
-  ethConnect,
-  solConnect,
-  cosmosConnect,
-} from "@lit-protocol/auth-browser";
-export const DISCORD_REDIRECT_URI = "http://localhost:5173";
-export const EOA_PRIVATE_KEY =
-  "0xac0974bec39a17e36ba4a6b4d238ff944bacb478cbed5efcae784d7bf4f2ff80";
+import { LIT_CHAIN_RPC_URL, LIT_CHAINS } from "@lit-protocol/constants";
+import { ethConnect, solConnect } from "@lit-protocol/auth-browser";
+import { EOA_PRIVATE_KEY } from "./tests/config";
+import { testDiscordAuthMethod } from "./tests/testDiscordAuthMethod";
+import { testGoogleAuthMethod } from "./tests/testGoogleAuthMethod";
+
 export const WALLET_CONNECT_PROJECT_ID = "34104ffa79c42bc7a3da115a421b80c7";
 
 function App() {
@@ -411,35 +402,7 @@ function App() {
 
     console.log("✅ decryptRes:", decryptRes);
   };
-  const runLitAuthClientDiscordStuff = async () => {
-    console.log("runLitAuthClientDiscordStuff:", runLitAuthClientDiscordStuff);
 
-    const litNodeClient = new LitNodeClient({
-      litNetwork: LitNetwork.Cayenne,
-    });
-
-    await litNodeClient.connect();
-
-    /**
-     * ========== Lit Auth Client ==========
-     */
-    const litAuthClient = new LitAuthClient({
-      litRelayConfig: {
-        relayUrl: RELAY_URL_CAYENNE,
-        relayApiKey: "098f6bcd4621d373cade4e832627b4f6",
-      },
-      litNodeClient,
-    });
-
-    const discordProvider = litAuthClient.initProvider<DiscordProvider>(
-      ProviderType.Discord,
-      {
-        redirectUri: DISCORD_REDIRECT_URI,
-      }
-    );
-
-    console.log("✅ DiscordProvider initialized!", discordProvider);
-  };
   const getSolanaAuthSig = async () => {
     const litNodeClient = new LitNodeClient({
       litNetwork: LitNetwork.Cayenne,
@@ -557,8 +520,12 @@ function App() {
           runWithCustomBrowserSigner
         </button>
         <hr />
-        <button onClick={async () => await runLitAuthClientDiscordStuff()}>
-          runLitAuthClientDiscordStuff
+        <button onClick={async () => await testDiscordAuthMethod()}>
+          testDiscordAuthMethod
+        </button>
+        <hr />
+        <button onClick={async () => await testGoogleAuthMethod()}>
+          testGoogleAuthMethod
         </button>
         <hr />
         <button onClick={async () => await getSolanaAuthSig()}>
