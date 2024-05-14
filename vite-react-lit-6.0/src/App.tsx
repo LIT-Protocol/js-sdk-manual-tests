@@ -29,10 +29,13 @@ function App() {
     console.log("🔥 LET'S GO!");
     const litNodeClient = new LitNodeClient({
       litNetwork: LitNetwork.Cayenne,
+      debug: true,
     });
 
     console.log("Connecting to LitNode...");
     await litNodeClient.connect();
+    console.log(litNodeClient.config);
+    console.log(litNodeClient.connectedNodes);
 
     const wallet = new ethers.Wallet(
       EOA_PRIVATE_KEY,
@@ -406,6 +409,7 @@ function App() {
   const getSolanaAuthSig = async () => {
     const litNodeClient = new LitNodeClient({
       litNetwork: LitNetwork.Cayenne,
+      debug: true,
     });
 
     await litNodeClient.connect();

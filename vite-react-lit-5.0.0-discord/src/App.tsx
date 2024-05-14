@@ -155,10 +155,10 @@ function App() {
           resource: new LitPKPResource(lastDiscordAuthMethodOwnedPkp.publicKey),
           ability: LitAbility.PKPSigning,
         },
-        // {
-        //   resource: new LitActionResource("*"),
-        //   ability: LitAbility.LitActionExecution,
-        // },
+        {
+          resource: new LitActionResource("*"),
+          ability: LitAbility.LitActionExecution,
+        },
       ],
       capacityDelegationAuthSig: capacityDelegationAuthSig,
       // AuthCallbackParams (6.0.0) would include sessionKey. Here, we are using the old way of passing sessionKey.
