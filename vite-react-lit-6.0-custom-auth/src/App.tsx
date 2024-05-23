@@ -184,9 +184,10 @@ const App = () => {
       <hr />
       {/* Step 2: Add Permitted Auth Method */}
       <p>
-        <b>Step 3</b> - Permit the custom auth method to use the Alice's PKP, so
-        we can check this in the Lit Action by calling the
-        `getPermittedAuthMethods` method.
+        <b>Step 3</b> - Permit the custom auth method to use Alice's PKP, so
+        that we could use the `getPermittedAuthMethods` method in the Lit Action
+        to check if the custom auth method is permitted, and handle custom
+        validation.
       </p>
 
       {step === 2 && (
@@ -225,7 +226,7 @@ const App = () => {
       )}
       <p>
         <b>Step 4</b> - Convert the Lit Action code to an IPFS CID, so we can
-        permit the action.
+        permit the Lit Action to use Alice's PKP.
       </p>
       <button
         onClick={() => executeStep(convertCodeToIpfsHash)}
@@ -257,7 +258,10 @@ const App = () => {
       {/* Step 5: Get Session Sigs */}
       <p>
         <b>Step 6</b> - Get the session signatures, so that we can use Alice's
-        PKP to sign.
+        PKP to sign. This is done by using the
+        `litNodeClient.getLitActionSessionSigs` function, by passing in Alice's
+        PKP public key, and custom auth material to the 'jsParams' field. So
+        that these values can be used and validated in the Lit Action code.
       </p>
 
       <button
