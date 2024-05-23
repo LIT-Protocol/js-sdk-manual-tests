@@ -144,6 +144,9 @@ const App = () => {
   return (
     <div>
       <h5>Env: {JSON.stringify(ENV)}</h5>
+      <p>
+        <b>Step 1</b> - Setup LitContracts and LitNodeClient.
+      </p>
 
       {/* Step 1: Mint PKP */}
       <button
@@ -152,31 +155,34 @@ const App = () => {
       >
         {loading && step === 0 ? "Setting up..." : "Setup"}
       </button>
+
+      {litNodeClient && <p>✅ litNodeClient is connected.</p>}
+      {litContracts && <p>✅ litContracts is connected.</p>}
       <p>
-        <b>Step 1</b> - Setup LitContracts and LitNodeClient.
+        <b>Step 2</b> - Alice mints a PKP using her EOA wallet
       </p>
-
-      {litNodeClient && <p>litNodeClient is connected.</p>}
-      {litContracts && <p>litContracts is connected.</p>}
-
       <button
         onClick={() => executeStep(useEoaWalletToMintPkp)}
         disabled={step !== 1 || loading}
       >
         {loading && step === 1 ? "Minting PKP..." : "Mint PKP"}
       </button>
-      <p>
-        <b>Step 2</b> - Alice mints a PKP using her EOA wallet
-      </p>
+
       {pkp && (
         <ul>
-          <li>tokenId: {pkp.tokenId}</li>
-          <li>publicKey: {pkp.publicKey}</li>
-          <li>ethAddress: {pkp.ethAddress}</li>
+          <li>✅ tokenId: {pkp.tokenId}</li>
+          <li>✅ publicKey: {pkp.publicKey}</li>
+          <li>✅ ethAddress: {pkp.ethAddress}</li>
         </ul>
       )}
       <hr />
       {/* Step 2: Add Permitted Auth Method */}
+      <p>
+        <b>Step 3</b> - Permit the custom auth method to use the Alice's PKP, so
+        we can check this in the Lit Action by calling the
+        `getPermittedAuthMethods` method.
+      </p>
+
       {step === 2 && (
         <Editor
           height="100px"
@@ -197,12 +203,10 @@ const App = () => {
           ? "Adding Permitted Auth Method..."
           : "Add Permitted Auth Method"}
       </button>
-      <p>
-        <b>Step 3</b> - Permit the custom auth method to use the Alice's PKP, so
-        we can check this in the Lit Action by calling the
-        `getPermittedAuthMethods` method.
-      </p>
-      {addPermittedAuthMethodHash && <p>Hash: {addPermittedAuthMethodHash}</p>}
+
+      {addPermittedAuthMethodHash && (
+        <p>✅ Hash: {addPermittedAuthMethodHash}</p>
+      )}
       <hr />
 
       {/* Step 3: Convert Code to IPFS Hash */}
@@ -213,6 +217,10 @@ const App = () => {
           value={litActionCode}
         />
       )}
+      <p>
+        <b>Step 4</b> - Convert the Lit Action code to an IPFS CID, so we can
+        permit the action.
+      </p>
       <button
         onClick={() => executeStep(convertCodeToIpfsHash)}
         disabled={step !== 3 || loading}
@@ -221,14 +229,14 @@ const App = () => {
           ? "Converting to IPFS Hash..."
           : "Convert to IPFS Hash"}
       </button>
-      <p>
-        <b>Step 4</b> - Convert the Lit Action code to an IPFS CID, so we can
-        permit the action.
-      </p>
-      {ipfsHash && <p>IPFS CID: {ipfsHash}</p>}
+
+      {ipfsHash && <p>✅ IPFS CID: {ipfsHash}</p>}
       <hr />
 
       {/* Step 4: Permit Lit Action */}
+      <p>
+        <b>Step 5</b> - Permit the Lit Action to use Alice's PKP.
+      </p>
       <button
         onClick={() => executeStep(permitLitAction)}
         disabled={step !== 4 || loading}
@@ -237,35 +245,35 @@ const App = () => {
           ? `Permitting ${ipfsHash}...`
           : `Permit ${ipfsHash}`}
       </button>
-      <p>
-        <b>Step 5</b> - Permit the Lit Action to use Alice's PKP.
-      </p>
-      {permittedActionHash && <p>Hash: {permittedActionHash}</p>}
+
+      {permittedActionHash && <p>✅ Hash: {permittedActionHash}</p>}
       <hr />
       {/* Step 5: Get Session Sigs */}
+      <p>
+        <b>Step 6</b> - Get the session signatures, so that we can use Alice's
+        PKP to sign.
+      </p>
+
       <button
         onClick={() => executeStep(getSessionSigs)}
         disabled={step !== 5 || loading}
       >
         {loading && step === 5 ? "Getting Session Sigs..." : "Get Session Sigs"}
       </button>
-      <p>
-        <b>Step 6</b> - Get the session signatures, so that we can use Alice's
-        PKP to sign.
-      </p>
+
       {sessionSigs && (
         <Editor
-          height="100px"
+          height="50px"
           defaultLanguage="json"
-          value={JSON.stringify(sessionSigs, null, 2)}
+          value={JSON.stringify(sessionSigs)}
         />
       )}
       <hr />
       {/* Step 6: PKP Sign */}
-      <button
-        onClick={() => executeStep(pkpSign)}
-        disabled={step !== 6 || loading}
-      >
+      <p>
+        <b>Step 7</b> - Alice signs the session with her PKP.
+      </p>
+      <button onClick={() => executeStep(pkpSign)}>
         {loading && step === 6 ? "Signing with PKP..." : "PKP Sign"}
       </button>
       {pkpSignResponse && (
