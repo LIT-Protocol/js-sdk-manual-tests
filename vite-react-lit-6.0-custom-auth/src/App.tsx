@@ -144,6 +144,12 @@ const App = () => {
   return (
     <div>
       <h5>Env: {JSON.stringify(ENV)}</h5>
+      <a
+        href="https://github.com/LIT-Protocol/js-sdk-manual-tests/blob/main/vite-react-lit-6.0-custom-auth/src/App.tsx"
+        target="_blank"
+      >
+        https://github.com/LIT-Protocol/js-sdk-manual-tests/blob/main/vite-react-lit-6.0-custom-auth/src/App.tsx
+      </a>
       <p>
         <b>Step 1</b> - Setup LitContracts and LitNodeClient.
       </p>
@@ -273,7 +279,10 @@ const App = () => {
       <p>
         <b>Step 7</b> - Alice signs the session with her PKP.
       </p>
-      <button onClick={() => executeStep(pkpSign)}>
+      <button
+        onClick={() => executeStep(pkpSign)}
+        disabled={step !== 6 || loading}
+      >
         {loading && step === 6 ? "Signing with PKP..." : "PKP Sign"}
       </button>
       {pkpSignResponse && (
